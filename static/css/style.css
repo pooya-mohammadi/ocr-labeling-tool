@@ -1,0 +1,51 @@
+#img-container {
+    display: block;
+    position: relative;
+    height: 100px;
+    margin: 50px auto;
+}
+
+input[type="text"] {
+    width: 150px;
+    border: 1px solid #e0e0e0;
+    border-radius: 5px;
+    font-size: 15px;
+    background-color: #fefefe;
+    color: #3c4043;
+    padding: 5px;
+    margin: 5px;
+    box-shadow: 0 0 1px rgb(150, 150, 150);
+    outline: none;
+    position: relative;
+}
+
+input[type="submit"] {
+    background-color: #1080e9;
+    border: none;
+    border-radius: 5px;
+    color: #ffffff;
+    padding: 5px 10px;
+    margin: 5px;
+    cursor: pointer;
+}
+
+#img_view {
+    display: block;
+    margin: auto;
+    height: 100px;
+    width: 720px;
+}
+
+#inputs-container {
+    position: relative;
+    display: block;
+    width: fit-content;
+    margin: 20px auto;
+}
+#btns-container {
+    padding: 20px;
+    position: relative;
+    display: block;
+    width: fit-content;
+    margin: 0 auto;
+}

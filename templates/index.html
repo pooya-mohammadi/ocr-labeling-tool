@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset='utf-8'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <title>OCR labeling tool</title>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <link rel="stylesheet" href="../static/css/style.css">
+</head>
+
+<body id="body">
+    <div id="img-container">
+        <img id="img_view" src="{{ url_for('get_next_image') }}" alt="Image">
+    </div>
+    <form action="{{url_for('action')}}" method="post" autocomplete="off" enctype="multipart/form-data">
+        <div id="inputs-container">
+            <label style="margin:3px 5px; font-family: monospace;" for="text">Text:</label>
+            <input type="text" id="text" name="text" value={{text}}>
+            <input type="submit" id="save" name="action" value="Save">
+            <input type="submit" id="skip" name="action" value="Skip">
+            <label style="margin:3px 5px; font-family: monospace;" for="jump">Jump to:</label>
+            <input type="text" id="jump" name="jump_index" placeholder="Jump to index">
+            <input type="submit" name="action" value="Jump">
+        </div>
+    </form>
+</body>
+<script>
+    //submit form when 'Enter' key is pressed while in body
+    //document.getElementById("body").addEventListener("keyup", function (event) {
+    //    if (event.keyCode === 32) {
+    //        document.getElementById("skip").click();
+    //    }
+    //});
+
+</script>
+
+</html>
