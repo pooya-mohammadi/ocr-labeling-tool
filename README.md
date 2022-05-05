@@ -6,15 +6,21 @@ This is a really simple web app to hand label text data for OCR tasks built on F
 ![](assets/demo.gif)
 
 ### Installation
-Install requirements:
+Install the requirements:
 ```bash
 pip install -r requirements.txt
 ```
 
 ### Usage
+The initial configs are located directly in `settings.py` module. The explanation of the hyper-parameters are as follows:
+* DATA_FOLDER: 
 The configs are located directly in `app.py` including source data folder, output folder, cursor file, etc.
 
-**Architecture:** First time you run the app a file  called `cursor.json` is created to gather your images paths and track your progress so that every time you run it you continue where you left off. (**Note:** Due to my laziness, the cursor module does not track any changes made on disk to the source images folder, so one has to manually modify the cursor config file under `images` key or delete the whole thing!) This file tracks the index to read and all images paths in the source folder.
+**Architecture:** First time you run the app a file  called `cursor.json` is created to gather your images
+paths and track your progress so that every time you run it you continue where you left off.
+(**Note:** Due to my laziness, the cursor module does not track any changes made on disk to 
+the source images folder, so one has to manually modify the cursor config file under `images` key or
+delete the whole thing!) This file tracks the index to read and all images paths in the source folder.
 A sample `cursor.json` file would be like below:
 ```json
 {
@@ -36,7 +42,7 @@ A sample `cursor.json` file would be like below:
 - *file_index_to_read*: images are indexed like above. this parameter sets the index to start from when the app is run.
 - *images*: index to image paths mapping
 
-When the app is run, the images show up based on the ordering in `cursor.json`. By default, the app considers that your files are named after their text. (Probably by another OCR model like EasyOCR) Then you have three options:
+When the app is running, the images show up based on the ordering in `cursor.json`. By default, the app considers that your files are named after their text. (Probably by another OCR model like EasyOCR) Then you have three options:
 1. Edit or write text you desire in the text box and hit `Save`. The file with the registered text + the index will be saved to the output folder. (If you hit `Save` without changing the default text that comes up, the same text will be registerd as the result)
 2. Hit `Skip` to ignore the image and text all together so that nothing is saved to the output folder.
 3. Choose a desired index from `cursor.json` and hit `Jump`. if the index is valid the `file_index_to_read` will be changed to that. Use this in case you need to modify a previously registered image to overwrite it. (Make sure to jump to your last index you were at)
