@@ -3,9 +3,10 @@ from os.path import isfile, join
 import json
 
 
-class Cursor(object):
-    def __init__(self, path, app):
-        self.app = app
+class Cursor:
+    def __init__(self, path, data_dir, cursor_path):
+        self.cursor_path = cursor_path
+        self.data_dir = data_dir
         self.path = path
         self._cursor_dict = self._initialize()
     
@@ -16,7 +17,7 @@ class Cursor(object):
         return self._cursor_dict[key]
 
     def __len__(self):
-        return len(self._cursor_dict.values())
+        return len(self._cursor_dict['images'])
     
     def __setitem__(self, key, data):
         self._cursor_dict[key] = data
@@ -35,16 +36,17 @@ class Cursor(object):
         # Fetch or create cursor file
         if not os.path.exists(self.path):
             cursor = {'file_index_to_read': 1, 'images': {}}
-            img_files = os.listdir(self.app.config['DATA_FOLDER'])
+            img_files = os.listdir(self.data_dir)
             index = 1
             for img_file in img_files:
-                if str(img_file).endswith(('.jpg', '.png', '.jpeg')) and isfile(join(self.app.config['DATA_FOLDER'], img_file)):
+                if str(img_file).endswith(('.jpg', '.png', '.jpeg')) and isfile(join(self.data_dir, img_file)):
                     cursor['images'][str(index)] = img_file
                 index += 1
-            with open(self.app.config['CURSOR_FILE'], 'w') as f:
+
+            with open(self.cursor_path, 'w') as f:
                 json.dump(cursor, f)
         # Open cursor file
-        with open(self.app.config['CURSOR_FILE']) as f:
+        with open(self.cursor_path) as f:
             cursor = json.load(f)
         return cursor
 
@@ -54,7 +56,7 @@ class Cursor(object):
         by hand in `cursor.json` file. It's also called every time `index.html` is rendered.
         """
         # Open cursor file
-        with open(self.app.config['CURSOR_FILE']) as f:
+        with open(self.cursor_path) as f:
             cursor = json.load(f)
         self._cursor_dict = cursor
 
@@ -64,7 +66,7 @@ class Cursor(object):
         If the given index is out of range, it falls back to 1.
         """
         if index > len(self):
-            index = 1
+            index = len(self)
         self._cursor_dict['file_index_to_read'] = index
         self._dump()
 
