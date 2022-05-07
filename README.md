@@ -11,12 +11,14 @@ Install the requirements:
 pip install -r requirements.txt
 ```
 
-### Usage
+### Configs & Settings
 The initial configs are located directly in `settings.py` module. The explanation of the hyper-parameters are as follows:
-* DATA_FOLDER: 
-The configs are located directly in `app.py` including source data folder, output folder, cursor file, etc.
+* DATA_FOLDER: The folder which contains the images.
+* CURSOR_FILE: The path which the cursor file is generated
+* RESULTS_FOLDER: The directory which the results are saved in after being labeled.
 
-**Architecture:** First time you run the app a file  called `cursor.json` is created to gather your images
+### Architecture
+First time you run the app a file  called `cursor.json` is created to gather your images
 paths and track your progress so that every time you run it you continue where you left off.
 (**Note:** Due to my laziness, the cursor module does not track any changes made on disk to 
 the source images folder, so one has to manually modify the cursor config file under `images` key or
