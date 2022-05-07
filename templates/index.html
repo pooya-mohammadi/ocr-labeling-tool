@@ -11,12 +11,14 @@
 
 <body id="body">
     <div id="img-container">
-        <img id="img_view" src="{{ url_for('get_next_image') }}" alt="Image">
+        <img id="img_view" src="{{ url_for('get_next_image') }}" alt="{{text}}">
     </div>
     <form action="{{url_for('action')}}" method="post" autocomplete="off" enctype="multipart/form-data">
         <div id="inputs-container">
-            <label style="margin:3px 5px; font-family: monospace;" for="text">Text:</label>
-            <input type="text" id="text" name="text" value={{text}}>
+            <label style="margin:3px 5px; font-family: monospace;" for="text_01">Text:</label>
+            <input type="text" id="text_01" name="text_01" value={{text_01}} minlength="2" maxlength="2">
+            <input type="text" id="text_02" name="text_02" value={{text_02}} minlength="1" maxlength="1">
+            <input type="text" id="text_03" name="text_03" value={{text_03}} minlength="5" maxlength="5">
             <input type="submit" id="save" name="action" value="Save">
             <input type="submit" id="skip" name="action" value="Skip">
             <label style="margin:3px 5px; font-family: monospace;" for="jump">Jump to:</label>
