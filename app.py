@@ -14,29 +14,47 @@ app.config['SEND_FILE_MAX_AGE_DEFAULT'] = -1
 app.jinja_env.auto_reload = True
 app.config['TEMPLATES_AUTO_RELOAD'] = True
 
+
+@app.after_request
+def add_header(r):
+    r.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
+    r.headers["Pragma"] = "no-cache"
+    r.headers["Expires"] = "0"
+    r.headers['Cache-Control'] = 'public, max-age=0'
+    return r
+
+
 # fetch cursor file
 cursor = Cursor(path=CURSOR_FILE, data_dir=DATA_FOLDER, cursor_path=CURSOR_FILE)
+
+OLD_IMAGE_NAME = ""
 
 
 # app routes
 @app.route('/index')
 @app.route('/')
 def index():
+    global OLD_IMAGE_NAME
     cursor.reload_file()
     text = os.path.splitext(cursor['images'][str(cursor['file_index_to_read'])])[0]
     text = text.split("_")[0]
     text_01 = text[:2]
     text_02 = text[2]
     text_03 = text[3:]
-    # photo = os.path.join(DATA_FOLDER, cursor['images'][str(cursor['file_index_to_read'])])
-    return render_template('index.html', text_01=text_01, text_02=text_02, text_03=text_03, text=text)
+    if OLD_IMAGE_NAME:
+        os.remove(os.path.join("static", OLD_IMAGE_NAME))
+    image_name = cursor['images'][str(cursor['file_index_to_read'])]
+    photo = os.path.join(DATA_FOLDER, image_name)
+    shutil.copy(photo, os.path.join("static", image_name))
+    OLD_IMAGE_NAME = image_name
+    return render_template('index.html', text_01=text_01, text_02=text_02, text_03=text_03, text=text, photo=image_name)
 
 
-@app.route('/get_next_image', methods=['GET'])
-def get_next_image():
-    index = cursor['file_index_to_read']
-    image_file = cursor['images'][str(index)]
-    return send_from_directory(DATA_FOLDER, path=image_file, max_age=-1)
+# @app.route('/get_next_image', methods=['GET'])
+# def get_next_image():
+#     index = cursor['file_index_to_read']
+#     image_file = cursor['images'][str(index)]
+#     return send_from_directory(DATA_FOLDER, path=image_file, max_age=-1)
 
 
 @app.route('/action', methods=['POST', 'GET'])
