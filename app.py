@@ -1,11 +1,16 @@
 import shutil
-
-from flask import Flask, render_template, send_from_directory, request, redirect, url_for
+from flask import Flask, render_template, request, redirect, url_for
 import os
-from PIL import Image
 from cursor import Cursor
 from desktopify import launch_gui
 from settings import CURSOR_FILE, DATA_FOLDER, TEXT_MAX_LEN, RESULTS_FOLDER, PORT
+
+
+def remove_create(dir_):
+    if os.path.exists(dir_):
+        shutil.rmtree(dir_)
+    os.makedirs(dir_)
+
 
 os.makedirs(RESULTS_FOLDER, exist_ok=True)
 
@@ -27,26 +32,21 @@ def add_header(r):
 # fetch cursor file
 cursor = Cursor(path=CURSOR_FILE, data_dir=DATA_FOLDER, cursor_path=CURSOR_FILE)
 
-OLD_IMAGE_NAME = ""
-
 
 # app routes
 @app.route('/index')
 @app.route('/')
 def index():
-    global OLD_IMAGE_NAME
     cursor.reload_file()
     text = os.path.splitext(cursor['images'][str(cursor['file_index_to_read'])])[0]
     text = text.split("_")[0]
     text_01 = text[:2]
     text_02 = text[2]
     text_03 = text[3:]
-    if OLD_IMAGE_NAME:
-        os.remove(os.path.join("static", OLD_IMAGE_NAME))
+    remove_create("static/ocr_images")
     image_name = cursor['images'][str(cursor['file_index_to_read'])]
     photo = os.path.join(DATA_FOLDER, image_name)
-    shutil.copy(photo, os.path.join("static", image_name))
-    OLD_IMAGE_NAME = image_name
+    shutil.copy(photo, os.path.join("static/ocr_images", image_name))
     return render_template('index.html', text_01=text_01, text_02=text_02, text_03=text_03, text=text, photo=image_name)
 
 

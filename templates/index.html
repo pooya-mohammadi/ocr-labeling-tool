@@ -11,7 +11,7 @@
 
 <body id="body">
     <div >
-        <img src="{{ url_for('static', filename='/') }}{{ photo }}" alt="{{text}}" class="center">
+        <img src="{{ url_for('static', filename='ocr_images/') }}{{ photo }}" alt="{{text}}" class="center">
     </div>
     <form action="{{url_for('action')}}" method="post" autocomplete="off" enctype="multipart/form-data">
         <div id="inputs-container">
