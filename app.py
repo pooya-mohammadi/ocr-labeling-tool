@@ -2,15 +2,8 @@ import shutil
 from flask import Flask, render_template, request, redirect, url_for
 import os
 from cursor import Cursor
-from desktopify import launch_gui
 from settings import CURSOR_FILE, DATA_FOLDER, TEXT_MAX_LEN, RESULTS_FOLDER, PORT
-
-
-def remove_create(dir_):
-    if os.path.exists(dir_):
-        shutil.rmtree(dir_)
-    os.makedirs(dir_)
-
+from deep_utils import remove_create
 
 os.makedirs(RESULTS_FOLDER, exist_ok=True)
 
@@ -86,4 +79,4 @@ def action():
 
 
 if __name__ == '__main__':
-    launch_gui(app, port=PORT)
+    app.run(port=PORT)
