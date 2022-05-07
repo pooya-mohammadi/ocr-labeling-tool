@@ -1,4 +1,4 @@
-pyqt5
-pyqtwebengine
-flask==1.1.2
-pillow
+pyqt5>=5.15.2
+pyqtwebengine>=5.15.0
+flask==2.0.2
+pillow==9.0.1
