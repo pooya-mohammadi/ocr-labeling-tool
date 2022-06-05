@@ -43,13 +43,6 @@ def index():
     return render_template('index.html', text_01=text_01, text_02=text_02, text_03=text_03, text=text, photo=image_name)
 
 
-# @app.route('/get_next_image', methods=['GET'])
-# def get_next_image():
-#     index = cursor['file_index_to_read']
-#     image_file = cursor['images'][str(index)]
-#     return send_from_directory(DATA_FOLDER, path=image_file, max_age=-1)
-
-
 @app.route('/action', methods=['POST', 'GET'])
 def action():
     if request.method == 'POST':
@@ -61,8 +54,8 @@ def action():
                 # get file extension e.g. jpg, png
                 img_extension = os.path.splitext(img_path)[1]
                 # copy file with a new name!
-                shutil.copy(img_path, f"{RESULTS_FOLDER}/{index}_{text}{img_extension}")
-                print(f"[INFO] Wrote image to {RESULTS_FOLDER}/{index}_{text}{img_extension}")
+                shutil.copy(img_path, f"{RESULTS_FOLDER}/{text}_{index}{img_extension}")
+                print(f"[INFO] Wrote image to {RESULTS_FOLDER}/{text}_{index}{img_extension}")
                 # update index to read in cursor
                 cursor.increase_index()
         # go to next image if skip is entered

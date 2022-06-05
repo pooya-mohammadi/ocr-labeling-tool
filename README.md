@@ -14,6 +14,7 @@ pip install -r requirements.txt
 ### Configs & Settings
 The initial configs are located directly in `settings.py` module. The explanation of the hyper-parameters are as follows:
 * DATA_FOLDER: The folder which contains the images.
+  * All the images should have the same naming convention which is to be like `text_index.ext`.
 * CURSOR_FILE: The path which the cursor file is generated
 * RESULTS_FOLDER: The directory which the results are saved in after being labeled.
 
