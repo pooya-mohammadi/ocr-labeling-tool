@@ -14,15 +14,16 @@
         <img src="{{ url_for('static', filename='ocr_images/') }}{{ photo }}" alt="{{text}}" class="center">
     </div>
     <form action="{{url_for('action')}}" method="post" autocomplete="off" enctype="multipart/form-data">
-        <div id="inputs-container">
+        <div id="inputs-container" style="width:60%" class="center">
+            <input type="checkbox" id="plate-usual" name="plate-usual"><label for="plate-usual">Plate</label><br>
             <label style="margin:3px 5px; font-family: monospace;" for="text_01">Text:</label>
-            <input type="text" id="text_01" name="text_01" value={{text_01}} minlength="2" maxlength="2">
-            <input type="text" id="text_02" name="text_02" value={{text_02}} minlength="1" maxlength="1">
-            <input type="text" id="text_03" name="text_03" value={{text_03}} minlength="5" maxlength="5">
+            <input type="text" id="text_01" name="text_01" value={{text_01}} minlength="1" maxlength="25" style="width:35%">
+            <input type="text" id="text_02" name="text_02" value={{text_02}} minlength="1" maxlength="1" style="display:none">
+            <input type="text" id="text_03" name="text_03" value={{text_03}} minlength="5" maxlength="5" style="display:none">
             <input type="submit" id="save" name="action" value="Save">
             <input type="submit" id="skip" name="action" value="Skip">
             <label style="margin:3px 5px; font-family: monospace;" for="jump">Jump to:</label>
-            <input type="text" id="jump" name="jump_index" placeholder="Jump to index">
+            <input type="text" id="jump" name="jump_index" placeholder="Jump to index" style="width:5%">
             <input type="submit" name="action" value="Jump">
         </div>
     </form>
@@ -34,6 +35,28 @@
     //        document.getElementById("skip").click();
     //    }
     //});
+    document.getElementById("plate-usual").onchange = function() {
+        if (this.checked)
+        {
+            document.getElementById("text_01").style.display = "inline";
+            document.getElementById("text_01").style.width = "10%";
+            document.getElementById("text_01").minLength = "2";
+            document.getElementById("text_01").maxLength = "2";
+
+            document.getElementById("text_02").style.display = "inline";
+            document.getElementById("text_03").style.display = "inline";
+
+        }
+        else
+        {
+            document.getElementById("text_01").style.width = "35%";
+            document.getElementById("text_01").minLength = "1";
+            document.getElementById("text_01").maxLength = "25";
+
+            document.getElementById("text_02").style.display = "none";
+            document.getElementById("text_03").style.display = "none";
+        }
+    }
 </script>
 
 </html>
