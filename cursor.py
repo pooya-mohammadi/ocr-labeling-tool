@@ -7,9 +7,11 @@ class Cursor:
     def __init__(self, data_dir):
         self.data_dir = data_dir
         if not os.path.isdir(self.data_dir):
-            raise NotADirectoryError(f"dataset: {self.data_dir} is not a directory!")
+            raise NotADirectoryError(
+                f"dataset: {self.data_dir} is not a directory!")
         dir_, name = os.path.split(data_dir)
-        self.cursor_path = join(dir_, f"ocr-labeling-cursor-{name}-cursor.json")
+        self.cursor_path = join(
+            dir_, f"ocr-labeling-cursor-{name}-cursor.json")
         self._cursor_dict = self._initialize()
 
     def __str__(self) -> str:
@@ -30,7 +32,8 @@ class Cursor:
         """
         # Fetch or create cursor file
         if not os.path.exists(self.cursor_path):
-            cursor = {'file_index_to_read': 1, 'images': {}, "data_dir": self.data_dir}
+            cursor = {'file_index_to_read': 1, 'images': {
+            }, "data_dir": self.data_dir, "min_length": "10", "max_length": "10"}
             img_files = os.listdir(self.data_dir)
             index = 1
             for img_file in img_files:
@@ -59,3 +62,8 @@ class Cursor:
 
     def reload_file(self):
         self._cursor_dict = load_json(self.cursor_path)
+
+    def save_lengths(self, min_length, max_length):
+        self._cursor_dict['min_length'] = min_length
+        self._cursor_dict['max_length'] = max_length
+        dump_json(self.cursor_path, self._cursor_dict)
