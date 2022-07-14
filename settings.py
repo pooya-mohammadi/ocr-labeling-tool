@@ -1,9 +1,7 @@
 # Static configs
 SEND_FILE_MAX_AGE_DEFAULT = 0
-CURSOR_FILE = './cursor.json'
-DATA_FOLDER = '/home/ai/projects/vehicle-plate-recognition-training/recognition/datasets/fa_dataset'
-RESULTS_FOLDER = '/home/ai/projects/vehicle-plate-recognition-training/recognition/datasets/fa_dataset_refined'
+DATA_PATH = '/home/ai/projects/national-id-card-training/id_character_recognizer/extra_samples'
+RESULTS_PATH = '/home/ai/projects/national-id-card-training/id_character_recognizer/extra_samples_res'
 TEXT_MAX_LEN = 24
+USE_CASE = "OCR"
 PORT = 8002
-
-

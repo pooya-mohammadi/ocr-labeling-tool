@@ -2,10 +2,10 @@ import shutil
 from flask import Flask, render_template, request, redirect, url_for
 import os
 from cursor import Cursor
-from settings import CURSOR_FILE, DATA_FOLDER, TEXT_MAX_LEN, RESULTS_FOLDER, PORT
-from deep_utils import remove_create
+from settings import DATA_PATH, TEXT_MAX_LEN, RESULTS_PATH, PORT, USE_CASE
+from deep_utils import remove_create, log_print, get_logger, split_extension
 
-os.makedirs(RESULTS_FOLDER, exist_ok=True)
+os.makedirs(RESULTS_PATH, exist_ok=True)
 
 app = Flask(__name__)
 app.config['SEND_FILE_MAX_AGE_DEFAULT'] = -1
@@ -23,7 +23,8 @@ def add_header(r):
 
 
 # fetch cursor file
-cursor = Cursor(path=CURSOR_FILE, data_dir=DATA_FOLDER, cursor_path=CURSOR_FILE)
+cursor = Cursor(data_dir=DATA_PATH)
+logger = get_logger("app", split_extension(cursor.cursor_path, extension=".log"))
 
 
 # app routes
@@ -32,14 +33,22 @@ cursor = Cursor(path=CURSOR_FILE, data_dir=DATA_FOLDER, cursor_path=CURSOR_FILE)
 def index():
     cursor.reload_file()
     text = os.path.splitext(cursor['images'][str(cursor['file_index_to_read'])])[0]
-    text = text.split("_")[0]
-    text_01 = text[:2]
-    text_02 = text[2]
-    text_03 = text[3:]
+    if USE_CASE.lower() == "plate":
+        text = text.split("_")[-1]
+        text_01 = text[:2]
+        text_02 = text[2]
+        text_03 = text[3:]
+    elif USE_CASE.lower() == "ocr":
+        text_01 = text.split("_")[-1]
+        text_02 = ""
+        text_03 = ""
+    else:
+        raise ValueError("USE_CASE type is not valid")
     remove_create("static/ocr_images")
     image_name = cursor['images'][str(cursor['file_index_to_read'])]
-    photo = os.path.join(DATA_FOLDER, image_name)
-    shutil.copy(photo, os.path.join("static/ocr_images", image_name))
+    photo = os.path.join(DATA_PATH, image_name)
+    dst = os.path.join("static/ocr_images", image_name)
+    shutil.copy(photo, dst)
     return render_template('index.html', text_01=text_01, text_02=text_02, text_03=text_03, text=text, photo=image_name)
 
 
@@ -47,15 +56,20 @@ def index():
 def action():
     if request.method == 'POST':
         if request.form['action'] == "Save":
-            text = request.form.get('text_01') + request.form.get("text_02") + request.form.get("text_03")
+            if USE_CASE == "plate":
+                text = request.form.get('text_01') + request.form.get("text_02") + request.form.get("text_03")
+            elif USE_CASE == "OCR":
+                text = request.form.get('text_01')
+            else:
+                raise ValueError()
             if len(text) <= TEXT_MAX_LEN:
                 index = cursor['file_index_to_read']
-                img_path = os.path.join(DATA_FOLDER, cursor['images'][str(index)])
+                img_path = os.path.join(DATA_PATH, cursor['images'][str(index)])
                 # get file extension e.g. jpg, png
                 img_extension = os.path.splitext(img_path)[1]
                 # copy file with a new name!
-                shutil.copy(img_path, f"{RESULTS_FOLDER}/{text}_{index}{img_extension}")
-                print(f"[INFO] Wrote image to {RESULTS_FOLDER}/{text}_{index}{img_extension}")
+                shutil.copy(img_path, f"{RESULTS_PATH}/{index}_{text}{img_extension}")
+                log_print(logger, f"Wrote image to {RESULTS_PATH}/{index}_{text}{img_extension}")
                 # update index to read in cursor
                 cursor.increase_index()
         # go to next image if skip is entered
