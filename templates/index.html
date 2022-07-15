@@ -10,23 +10,37 @@
 </head>
 
 <body id="body">
-    <div >
-        <img src="{{ url_for('static', filename='ocr_images/') }}{{ photo }}" alt="{{text}}" class="center">
+    <div class="img-container center">
+        <img src="{{ url_for('static', filename='ocr_images/') }}{{ photo }}" alt="{{text}}" >
     </div>
-    <form action="{{url_for('action')}}" method="post" autocomplete="off" enctype="multipart/form-data">
-        <div id="inputs-container" style="width:60%" class="center">
-            <input type="checkbox" id="plate-usual" name="plate-usual"><label for="plate-usual">Plate</label><br>
-            <label style="margin:3px 5px; font-family: monospace;" for="text_01">Text:</label>
-            <input type="text" id="text_01" name="text_01" value={{text_01}} minlength="1" maxlength="25" style="width:35%">
-            <input type="text" id="text_02" name="text_02" value={{text_02}} minlength="1" maxlength="1" style="display:none">
-            <input type="text" id="text_03" name="text_03" value={{text_03}} minlength="5" maxlength="5" style="display:none">
-            <input type="submit" id="save" name="action" value="Save">
-            <input type="submit" id="skip" name="action" value="Skip">
-            <label style="margin:3px 5px; font-family: monospace;" for="jump">Jump to:</label>
-            <input type="text" id="jump" name="jump_index" placeholder="Jump to index" style="width:5%">
-            <input type="submit" name="action" value="Jump">
-        </div>
-    </form>
+    <div class="form-container center">
+        <form action="{{url_for('action')}}" method="post" autocomplete="off" enctype="multipart/form-data">
+            <div id="inputs-container" style="width:60%" class="center">
+                <input type="checkbox" id="plate-usual" name="plate-usual"><label for="plate-usual">Plate</label>
+                <br>                
+
+                <label for="text_min_len">Min Length:</label>
+                <input type="text" id="text_min_len" name="text_min_len">
+                <label for="text_max_len">Max Length:</label>
+                <input type="text" id="text_max_len" name="text_max_len">
+
+                <input type="submit" id="Set" name="action" value="Set">
+
+
+                <br>
+                <label for="text_01">Text:</label>
+                <input type="text" id="text_01" name="text_01" value={{text_01}} minlength="1" maxlength="25" style="width:35%">
+                <input type="text" id="text_02" name="text_02" value={{text_02}} minlength="1" maxlength="1" style="display:none">
+                <input type="text" id="text_03" name="text_03" value={{text_03}} minlength="5" maxlength="5" style="display:none">
+                <input type="submit" id="save" name="action" value="Save" onClick="return empty()">
+                <input type="submit" id="skip" name="action" value="Skip">
+                <label for="jump">Jump to:</label>
+                <input type="text" id="jump" name="jump_index" placeholder="Jump to index" style="width:5%">
+                <input type="submit" name="action" value="Jump" onClick="return zero()">
+            </div>
+        </form>
+    </div>
+    
 </body>
 <script>
     //submit form when 'Enter' key is pressed while in body
@@ -35,6 +49,46 @@
     //        document.getElementById("skip").click();
     //    }
     //});
+
+    function empty() {
+        var value;
+        value = document.getElementById("text_01").value;
+        if (value == "") {
+            alert("Fill the field.");
+            return false;
+        };
+    }
+
+    function zero() {
+        var value;
+        value = document.getElementById("jump").value;
+        if (value == "0") {
+            alert("Index starts from 1.");
+            return false;
+        };
+    }
+        
+    function setLengths(e) {
+        const minLength = document.getElementById("text_min_len").value
+        const maxLength = document.getElementById("text_max_len").value
+
+        textElement = document.getElementById("text_01");
+        textElement.minLength = minLength;
+        textElement.maxLength = maxLength;
+
+
+        console.log(minLength, maxLength);
+    }
+
+
+    document.getElementById("body").onload = function(e) {
+        document.getElementById("text_min_len").value = {{min_length}}
+        document.getElementById("text_max_len").value = {{max_length}}
+
+        setLengths(e)
+
+    }
+
     document.getElementById("plate-usual").onchange = function() {
         if (this.checked)
         {
@@ -57,6 +111,9 @@
             document.getElementById("text_03").style.display = "none";
         }
     }
+
+    document.getElementById("Set").onclick = setLengths
+
 </script>
 
 </html>
