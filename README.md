@@ -83,3 +83,6 @@ $ python app.py
 Qt window will pop up but if you prefer web apps you can also navigate to http://localhost:8002
 
 ![](assets/demo.png)
+
+# References:
+1. https://github.com/pooya-mohammadi/deep_utils
