@@ -1,19 +1,33 @@
-#img-container {
+.img-container {
     display: block;
-    # position: center;
-    # justify-content: center;
-    horizontal-align: middle;
-    height: 100px;
-    margin: 50px auto;
+     /* position: center; */
+     /* justify-content: center; */
+    /* horizontal-align: middle; */
+    height: 500px;
 }
+
+.form-contianer {
+    display: block;
+    height: 30%;
+}
+
 .center {
   display: block;
-  margin-left: auto;
-  margin-right: auto;
-  width: auto;
-  height: auto;
-  margin: 50px auto;
+  margin: 10px auto;
 }
+
+img {
+    display: block;
+    max-height: 500px;
+    margin: 10px auto;
+    object-fit: scale-down;
+}
+
+label {
+    margin:3px 5px;
+    font-family: monospace;
+}
+
 input[type="text"] {
     width: 150px;
     border: 1px solid #e0e0e0;
@@ -29,6 +43,16 @@ input[type="text"] {
 }
 
 input[type="submit"] {
+    background-color: #1080e9;
+    border: none;
+    border-radius: 5px;
+    color: #ffffff;
+    padding: 5px 10px;
+    margin: 5px;
+    cursor: pointer;
+}
+
+input[type="button"] {
     background-color: #1080e9;
     border: none;
     border-radius: 5px;

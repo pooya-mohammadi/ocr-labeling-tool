@@ -33,6 +33,8 @@ logger = get_logger("app", split_extension(cursor.cursor_path, extension=".log")
 def index():
     cursor.reload_file()
     text = os.path.splitext(cursor['images'][str(cursor['file_index_to_read'])])[0]
+    min_length = cursor['min_length']
+    max_length = cursor['max_length']
     if USE_CASE.lower() == "plate":
         text = text.split("_")[-1]
         text_01 = text[:2]
@@ -49,7 +51,8 @@ def index():
     photo = os.path.join(DATA_PATH, image_name)
     dst = os.path.join("static/ocr_images", image_name)
     shutil.copy(photo, dst)
-    return render_template('index.html', text_01=text_01, text_02=text_02, text_03=text_03, text=text, photo=image_name)
+    return render_template('index.html', text_01=text_01, text_02=text_02, text_03=text_03, text=text, photo=image_name,
+    min_length=min_length, max_length=max_length)
 
 
 @app.route('/action', methods=['POST', 'GET'])
@@ -79,9 +82,13 @@ def action():
         elif request.form['action'] == "Jump":
             try:
                 jump_index = int(request.form['jump_index'])
+                if jump_index == 0:
+                    raise ValueError("Index starts from 1.")
                 cursor.set_index(jump_index)
             except ValueError:
                 return redirect(url_for('index'))
+        elif request.form['action'] == "Set":
+            cursor.save_lengths(request.form['text_min_len'], request.form['text_max_len'])
     return redirect(url_for('index'))
 
 
