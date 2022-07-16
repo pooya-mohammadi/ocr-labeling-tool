@@ -64,9 +64,9 @@ def action():
     use_case = cursor['use_case']
     if request.method == 'POST':
         if request.form['action'] == "Save":
-            if use_case == "plate":
+            if use_case.lower() == "plate":
                 text = request.form.get('text_01') + request.form.get("text_02") + request.form.get("text_03")
-            elif use_case == "OCR":
+            elif use_case.lower() == "ocr":
                 text = request.form.get('text_01')
             else:
                 raise ValueError()
