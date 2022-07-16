@@ -33,7 +33,7 @@ class Cursor:
         # Fetch or create cursor file
         if not os.path.exists(self.cursor_path):
             cursor = {'file_index_to_read': 1, 'images': {
-            }, "data_dir": self.data_dir, "min_length": "10", "max_length": "10"}
+            }, "data_dir": self.data_dir, "min_length": "10", "max_length": "10", "use_case": "ocr"}
             img_files = os.listdir(self.data_dir)
             index = 1
             for img_file in img_files:
@@ -66,4 +66,12 @@ class Cursor:
     def save_lengths(self, min_length, max_length):
         self._cursor_dict['min_length'] = min_length
         self._cursor_dict['max_length'] = max_length
+        dump_json(self.cursor_path, self._cursor_dict)
+
+    def set_use_case_plate(self, use_case):
+        if use_case:
+            self._cursor_dict['use_case'] = 'plate'
+        else:
+            self._cursor_dict['use_case'] = 'ocr'
+
         dump_json(self.cursor_path, self._cursor_dict)
