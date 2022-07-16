@@ -35,12 +35,16 @@ def index():
     text = os.path.splitext(cursor['images'][str(cursor['file_index_to_read'])])[0]
     min_length = cursor['min_length']
     max_length = cursor['max_length']
-    if USE_CASE.lower() == "plate":
+    index = cursor['file_index_to_read']
+    images_count = len(cursor['images'])
+    use_case = cursor['use_case']
+
+    if use_case.lower() == "plate":
         text = text.split("_")[-1]
         text_01 = text[:2]
         text_02 = text[2]
         text_03 = text[3:]
-    elif USE_CASE.lower() == "ocr":
+    elif use_case.lower() == "ocr":
         text_01 = text.split("_")[-1]
         text_02 = ""
         text_03 = ""
@@ -52,16 +56,17 @@ def index():
     dst = os.path.join("static/ocr_images", image_name)
     shutil.copy(photo, dst)
     return render_template('index.html', text_01=text_01, text_02=text_02, text_03=text_03, text=text, photo=image_name,
-    min_length=min_length, max_length=max_length)
+    min_length=min_length, max_length=max_length, index=index, images_count=images_count, use_case=use_case.lower())
 
 
 @app.route('/action', methods=['POST', 'GET'])
 def action():
+    use_case = cursor['use_case']
     if request.method == 'POST':
         if request.form['action'] == "Save":
-            if USE_CASE == "plate":
+            if use_case == "plate":
                 text = request.form.get('text_01') + request.form.get("text_02") + request.form.get("text_03")
-            elif USE_CASE == "OCR":
+            elif use_case == "OCR":
                 text = request.form.get('text_01')
             else:
                 raise ValueError()
@@ -88,9 +93,18 @@ def action():
             except ValueError:
                 return redirect(url_for('index'))
         elif request.form['action'] == "Set":
-            cursor.save_lengths(request.form['text_min_len'], request.form['text_max_len'])
+            try:
+                cursor.save_lengths(request.form['text_min_len'], request.form['text_max_len'])
+                cursor.set_use_case_plate(request.form['plate-usual'] == 'on')
+            except KeyError as e:
+                if e.args[0] == 'text_min_len':
+                    cursor.save_lengths("3", "3")
+                    cursor.set_use_case_plate(True)
+                if e.args[0] == 'plate-usual':
+                    cursor.set_use_case_plate(False)
+
     return redirect(url_for('index'))
 
 
 if __name__ == '__main__':
-    app.run(port=PORT)
+    app.run(port=PORT, debug=False)

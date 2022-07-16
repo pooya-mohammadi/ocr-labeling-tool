@@ -1,48 +1,59 @@
 <!DOCTYPE html>
 <html>
-
-<head>
-    <meta charset='utf-8'>
-    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
-    <title>OCR labeling tool</title>
-    <meta name='viewport' content='width=device-width, initial-scale=1'>
-    <link rel="stylesheet" href="../static/css/style.css">
-</head>
-
-<body id="body">
-    <div class="img-container center">
-        <img src="{{ url_for('static', filename='ocr_images/') }}{{ photo }}" alt="{{text}}" >
-    </div>
-    <div class="form-container center">
-        <form action="{{url_for('action')}}" method="post" autocomplete="off" enctype="multipart/form-data">
-            <div id="inputs-container" style="width:60%" class="center">
-                <input type="checkbox" id="plate-usual" name="plate-usual"><label for="plate-usual">Plate</label>
-                <br>                
-
-                <label for="text_min_len">Min Length:</label>
-                <input type="text" id="text_min_len" name="text_min_len">
-                <label for="text_max_len">Max Length:</label>
-                <input type="text" id="text_max_len" name="text_max_len">
-
-                <input type="submit" id="Set" name="action" value="Set">
-
-
-                <br>
-                <label for="text_01">Text:</label>
-                <input type="text" id="text_01" name="text_01" value={{text_01}} minlength="1" maxlength="25" style="width:35%">
-                <input type="text" id="text_02" name="text_02" value={{text_02}} minlength="1" maxlength="1" style="display:none">
-                <input type="text" id="text_03" name="text_03" value={{text_03}} minlength="5" maxlength="5" style="display:none">
-                <input type="submit" id="save" name="action" value="Save" onClick="return empty()">
-                <input type="submit" id="skip" name="action" value="Skip">
-                <label for="jump">Jump to:</label>
-                <input type="text" id="jump" name="jump_index" placeholder="Jump to index" style="width:5%">
-                <input type="submit" name="action" value="Jump" onClick="return zero()">
-            </div>
-        </form>
-    </div>
-    
-</body>
-<script>
+    <head>
+        <meta charset='utf-8'>
+        <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+        <title>OCR labeling tool</title>
+        <meta name='viewport' content='width=device-width, initial-scale=1'>
+        <link rel="stylesheet" href="../static/css/style.css">
+    </head>
+    <body id="body">
+        <div class="img-container center">
+            <img src="{{ url_for('static', filename='ocr_images/') }}{{ photo }}"
+                 alt="{{ text }}">
+        </div>
+        <div class="form-container center">
+            <form action="{{ url_for('action')}}"
+                  method="post"
+                  autocomplete="off"
+                  enctype="multipart/form-data">
+                <div id="inputs-container" style="width:60%" class="center">
+                    <div style="display: flex; align-items: center">
+                        <label for="plate-usual">Plate</label>
+                        <input type="checkbox" id="plate-usual" name="plate-usual">
+                        <label for="text_min_len">Min Length:</label>
+                        <input type="text" id="text_min_len" name="text_min_len" style="width: 25px">
+                        <label for="text_max_len">Max Length:</label>
+                        <input type="text" id="text_max_len" name="text_max_len" style="width: 25px">
+                        <input type="submit" id="Set" name="action" value="Set">
+                        <span class="spacer"></span>
+                        <span style="margin: 0px 10px">{{ index }}/{{ images_count }}</span>
+                    </div>
+                    <div style="display:flex; align-items:center">
+                        <label for="text_01">Text:</label>
+                        <input type="text" id="text_01" name="text_01" value={{ text_01 }} minlength="1" maxlength="25" style="width:35%">
+                        <input type="text" id="text_02" name="text_02" minlength="1" maxlength="1" style="display:none; width:20px" value={{ text_02 }}>
+                        <input type="text" id="text_03" name="text_03" minlength="5" maxlength="5" style="display:none; width:10%" value={{ text_03 }}>
+                        <input type="submit"
+                               id="save"
+                               name="action"
+                               value="Save"
+                               onClick="return empty()">
+                        <input type="submit" id="skip" name="action" value="Skip">
+                        <span class="spacer"></span>
+                        <label for="jump">Jump to:</label>
+                        <input type="text"
+                               id="jump"
+                               name="jump_index"
+                               placeholder="Index"
+                               style="width:5%">
+                        <input type="submit" name="action" value="Jump" onClick="return zero()">
+                    </div>
+                </div>
+            </form>
+        </div>
+    </body>
+    <script>
     //submit form when 'Enter' key is pressed while in body
     //document.getElementById("body").addEventListener("keyup", function (event) {
     //    if (event.keyCode === 32) {
@@ -76,44 +87,87 @@
         textElement.minLength = minLength;
         textElement.maxLength = maxLength;
 
-
-        console.log(minLength, maxLength);
     }
 
 
-    document.getElementById("body").onload = function(e) {
-        document.getElementById("text_min_len").value = {{min_length}}
-        document.getElementById("text_max_len").value = {{max_length}}
-
-        setLengths(e)
-
-    }
-
-    document.getElementById("plate-usual").onchange = function() {
-        if (this.checked)
+    function onLoadCheckbox(check) {
+        if (check)
         {
             document.getElementById("text_01").style.display = "inline";
             document.getElementById("text_01").style.width = "10%";
-            document.getElementById("text_01").minLength = "2";
-            document.getElementById("text_01").maxLength = "2";
+            //document.getElementById("text_01").minLength = "2";
+            //document.getElementById("text_01").maxLength = "2";
 
             document.getElementById("text_02").style.display = "inline";
             document.getElementById("text_03").style.display = "inline";
+
+            document.getElementById("text_min_len").disabled = true;
+            document.getElementById("text_max_len").disabled = true;
 
         }
         else
         {
             document.getElementById("text_01").style.width = "35%";
-            document.getElementById("text_01").minLength = "1";
-            document.getElementById("text_01").maxLength = "25";
+            //document.getElementById("text_01").minLength = "1";
+            //document.getElementById("text_01").maxLength = "25";
 
             document.getElementById("text_02").style.display = "none";
             document.getElementById("text_03").style.display = "none";
+
+            document.getElementById("text_min_len").disabled = false;
+            document.getElementById("text_max_len").disabled = false;
         }
+
+    }
+
+    document.getElementById("body").onload = function(e) {
+        document.getElementById("text_min_len").value = {{min_length}}
+        document.getElementById("text_max_len").value = {{max_length}}
+        const check = {{use_case | tojson}} == "plate"
+        document.getElementById("plate-usual").checked = check
+        setLengths(e)
+        onLoadCheckbox(check)
+    }
+
+    document.getElementById("plate-usual").onchange = function(){
+        if (this.checked)
+        {
+            document.getElementById("text_01").style.display = "inline";
+            document.getElementById("text_01").style.width = "10%";
+            //document.getElementById("text_01").minLength = "2";
+            //document.getElementById("text_01").maxLength = "2";
+
+            document.getElementById("text_02").style.display = "inline";
+            document.getElementById("text_03").style.display = "inline";
+
+            document.getElementById("text_min_len").disabled = true;
+            document.getElementById("text_max_len").disabled = true;
+
+        
+            document.getElementById("text_min_len").value = 3
+            document.getElementById("text_max_len").value = 3
+
+        }
+        else
+        {
+            document.getElementById("text_01").style.width = "35%";
+            //document.getElementById("text_01").minLength = "1";
+            //document.getElementById("text_01").maxLength = "25";
+
+            document.getElementById("text_02").style.display = "none";
+            document.getElementById("text_03").style.display = "none";
+
+            document.getElementById("text_min_len").disabled = false;
+            document.getElementById("text_max_len").disabled = false;
+
+            document.getElementById("text_min_len").value = 10
+            document.getElementById("text_max_len").value = 10
+
+        }
+
     }
 
     document.getElementById("Set").onclick = setLengths
 
-</script>
-
+    </script>
 </html>
