@@ -8,9 +8,15 @@ This is a really simple web app to hand label text data for OCR tasks built on F
 
 ### Installation
 
+First clone the project:
+```commandline
+git clone https://github.com/pooya-mohammadi/ocr-labeling-tool
+```
+
 Install the requirements:
 
 ```bash
+cd ocr-labeling-tool # enter to root project
 pip install -r requirements.txt
 ```
 
