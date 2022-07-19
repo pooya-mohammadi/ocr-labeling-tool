@@ -27,7 +27,7 @@ follows:
 
 * DATA_PATH: The folder which contains the images.
     * All the images should have the same naming convention which is as follows:
-    * `{index}_{text}.ext`.
+    * `{index}_{text}.{ext}`.
     * A sample can contain several indices split by "_"/underline
 * RESULTS_PATH: The directory which the results are saved in after being labeled.
 
