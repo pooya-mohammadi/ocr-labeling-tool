@@ -92,3 +92,4 @@ Qt window will pop up but if you prefer web apps you can also navigate to http:/
 
 # References:
 1. https://github.com/pooya-mohammadi/deep_utils
+2. https://github.com/arxyzan/ocr-labeling-tool
