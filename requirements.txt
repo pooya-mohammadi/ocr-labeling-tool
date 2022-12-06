@@ -2,4 +2,4 @@ pyqt5>=5.15.2
 pyqtwebengine>=5.15.0
 flask==2.0.2
 pillow==9.0.1
-deep_utils>=0.8.26
+deep_utils==0.10.6
